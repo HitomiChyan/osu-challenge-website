@@ -73,4 +73,12 @@ app.get('/leaderboard', async (req, res) => {
         const leaderboard = await collection.find().sort({ score: -1 }).toArray();
         res.status(200).json(leaderboard);
     } catch (error) {
-        console.error("
+        console.error("❌ 伺服器錯誤：", error);
+        res.status(500).json({ message: "❌ 伺服器錯誤", error });
+    }
+});
+
+// **啟動伺服器**
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
