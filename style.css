@@ -26,7 +26,10 @@ a:hover {
 .banner {
     position: relative;
     width: 100%;
-    height: auto; /* 讓高度自適應 */
+    max-height: 300px; /* 限制最大高度，避免過度佔用空間 */
+    background-image: url('banner.jpg'); /* 背景圖 */
+    background-size: cover;
+    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,8 +40,9 @@ a:hover {
 .banner img {
     width: 100%;
     height: auto;
+    max-height: 250px; /* 限制圖片高度 */
+    object-fit: cover;
     display: block;
-    object-fit: contain; /* 確保圖片完整顯示 */
 }
 
 /* 主要內容區塊 */
@@ -52,8 +56,11 @@ a:hover {
 
 /* 響應式設計 - 確保不同裝置顯示正常 */
 @media (max-width: 768px) {
+    .banner {
+        max-height: 200px; /* 限制 Banner 高度 */
+    }
+
     .banner img {
-        width: 100%;
-        height: auto;
+        max-height: 180px; /* 避免圖片變形 */
     }
 }
