@@ -28,6 +28,10 @@ async function connectDB() {
     return db;
 }
 
+// **載入身份驗證路由**
+const authRoutes = require("./auth");
+app.use("/auth", authRoutes);
+
 // **登入系統（正式版應使用 JWT）**
 const validUsers = [
     { username: "admin", password: "1234" }
@@ -69,12 +73,4 @@ app.get('/leaderboard', async (req, res) => {
         const leaderboard = await collection.find().sort({ score: -1 }).toArray();
         res.status(200).json(leaderboard);
     } catch (error) {
-        console.error("❌ 伺服器錯誤：", error);
-        res.status(500).json({ message: "❌ 伺服器錯誤", error });
-    }
-});
-
-// **啟動伺服器**
-app.listen(3000, () => {
-    console.log("🚀 伺服器已啟動：http://localhost:3000");
-}); // 🔹 **這裡補齊 `}`！🚀**
+        console.error("
