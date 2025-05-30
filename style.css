@@ -1,0 +1,59 @@
+/* 網頁背景與整體樣式 */
+body {
+    background: linear-gradient(to bottom, #6d4c41, #3b2e2e); /* 更明顯的深棕色漸層 */
+    color: #e0d7c6; /* 米色，提升閱讀舒適度 */
+    font-family: 'Times New Roman', serif; /* 書卷風格字體 */
+    text-align: center;
+}
+
+/* 主要標題顏色 */
+h1 {
+    color: #d4a373; /* 柔和橘棕色，增添古典氣息 */
+}
+
+/* 超連結樣式 */
+a {
+    color: #c09775; /* 更明顯的金棕色 */
+    font-weight: bold;
+    text-decoration: none; /* 去除底線，讓風格更雅致 */
+}
+
+a:hover {
+    color: #ffcc99; /* 鼠標懸停時變亮，增加互動感 */
+}
+
+/* Banner 設計 */
+.banner {
+    position: relative;
+    width: 100%;
+    height: auto; /* 讓高度自適應 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* 讓 Banner 內的圖片完整顯示 */
+.banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain; /* 確保圖片完整顯示 */
+}
+
+/* 主要內容區塊 */
+.content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    background: rgba(77, 52, 39, 0.85); /* 更深的半透明棕色，增強可讀性 */
+    border-radius: 10px; /* 柔和圓角 */
+}
+
+/* 響應式設計 - 確保不同裝置顯示正常 */
+@media (max-width: 768px) {
+    .banner img {
+        width: 100%;
+        height: auto;
+    }
+}

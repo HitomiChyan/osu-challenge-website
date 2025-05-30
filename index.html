@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖✨蘭喵夢想盃挑戰活動✨📖</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 完整顯示 Banner -->
+    <div class="banner">
+        <img src="https://raw.githubusercontent.com/HitomiChyan/osu-challenge-website/main/%E8%98%AD%E5%96%B5%E5%A4%A2%E6%83%B3%E7%9B%83.png" alt="蘭喵夢想盃挑戰活動">
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="content">
+        <header>
+            <h1>📖✨蘭喵夢想盃挑戰活動✨📖</h1>
+        </header>
+
+        <section>
+            <h2>活動介紹</h2>
+            <p>這是一個 osu! 特別挑戰，完成指定圖譜即可獲得獎勵！</p>
+            <a href="https://osu.ppy.sh/beatmapsets/你的圖譜ID" target="_blank">立即挑戰</a>
+        </section>
+
+        <!-- 🔒 登入表單 -->
+        <section>
+            <h2>🔒 請先登入才能上傳資料</h2>
+            <form id="loginForm">
+                <input type="text" name="username" placeholder="帳號" required>
+                <input type="password" name="password" placeholder="密碼" required>
+                <button type="submit">登入</button>
+            </form>
+        </section>
+
+        <!-- 📤 上傳挑戰結果（初始隱藏，登入成功後顯示） -->
+        <section id="uploadSection" style="display: none;">
+            <h2>📤 上傳你的挑戰結果</h2>
+            <form id="uploadForm">
+                <input type="number" name="score" placeholder="輸入分數" required>
