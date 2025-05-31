@@ -6,180 +6,72 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     .hidden { display: none; }
+    .form-group { margin-bottom: 10px; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background: #f0f0f0; }
     button { padding: 5px 10px; margin: 2px; }
-    input[type="text"], input[type="number"] { width: 100px; }
+    input[type="text"], input[type="number"], input[type="date"] { width: 150px; }
   </style>
 </head>
 <body>
   <h1>管理員後台</h1>
 
-  <!-- 1. 登入區 -->
+  <!-- 登入區 -->
   <div id="login-section">
     <h2>管理員登入</h2>
-    <label>帳號：<input type="text" id="username" /></label><br /><br />
-    <label>密碼：<input type="password" id="password" /></label><br /><br />
+    <div class="form-group">
+      <label>帳號：<input type="text" id="username" /></label>
+    </div>
+    <div class="form-group">
+      <label>密碼：<input type="password" id="password" /></label>
+    </div>
     <button id="btn-login">登入</button>
     <p id="login-error" style="color:red;"></p>
   </div>
 
-  <!-- 2. 退出登入區 -->
+  <!-- 登出區 -->
   <div id="logout-section" class="hidden">
     <button id="btn-logout">登出</button>
   </div>
 
-  <!-- 3. 參賽者列表 -->
+  <!-- Dashboard (只有登入後才顯示) -->
   <div id="dashboard-section" class="hidden">
+    <!-- 1. 新增參賽者（只有 full 權限顯示） -->
+    <div id="add-section" class="hidden">
+      <h2>新增參賽者（僅限 full 權限）</h2>
+      <div class="form-group">
+        <label>使用者名稱：<input type="text" id="new-username" /></label>
+      </div>
+      <div class="form-group">
+        <label>分數：<input type="number" id="new-score" /></label>
+      </div>
+      <div class="form-group">
+        <label>日期：<input type="date" id="new-date" /></label>
+      </div>
+      <button id="btn-add">新增</button>
+      <p id="add-error" style="color:red;"></p>
+      <hr />
+    </div>
+
+    <!-- 2. 參賽者列表 -->
     <h2>參賽者列表</h2>
-    <table id="tbl-registrations">
+    <table id="tbl-scores">
       <thead>
         <tr>
           <th>ID</th>
-          <th>姓名</th>
+          <th>使用者名稱</th>
           <th>分數</th>
-          <th>更新分數</th>
+          <th>更新</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
-        <!-- 這裡動態填資料 -->
+        <!-- 這裡由 admin.js 動態填資料 -->
       </tbody>
     </table>
   </div>
 
-  <script>
-    const loginSection     = document.getElementById('login-section');
-    const dashboardSection = document.getElementById('dashboard-section');
-    const logoutSection    = document.getElementById('logout-section');
-    const loginError       = document.getElementById('login-error');
-    const tblBody          = document.querySelector('#tbl-registrations tbody');
-
-    // Helper: 取得完整 API URL（如果你放在 GitHub Pages，前面要加上你自己的 domain 或相對路徑）
-    const API_BASE = 'http://localhost:3000';
-
-    // 1. 登入
-    document.getElementById('btn-login').addEventListener('click', async () => {
-      loginError.textContent = '';
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      if (!username || !password) {
-        loginError.textContent = '請填寫帳號與密碼';
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/api/admin/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // 把 cookie 帶入／允許
-          body: JSON.stringify({ username, password })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          loginError.textContent = data.message || '登入失敗';
-          return;
-        }
-        // 登入成功：切換畫面
-        loginSection.classList.add('hidden');
-        logoutSection.classList.remove('hidden');
-        dashboardSection.classList.remove('hidden');
-        loadRegistrations();
-      } catch (err) {
-        loginError.textContent = '網路錯誤，請稍後再試';
-      }
-    });
-
-    // 2. 登出
-    document.getElementById('btn-logout').addEventListener('click', async () => {
-      await fetch(`${API_BASE}/api/admin/logout`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      // 清空畫面，回到登入
-      dashboardSection.classList.add('hidden');
-      logoutSection.classList.add('hidden');
-      loginSection.classList.remove('hidden');
-    });
-
-    // 3. 載入並顯示參賽者列表
-    async function loadRegistrations() {
-      tblBody.innerHTML = ''; // 清空表格
-      try {
-        const res = await fetch(`${API_BASE}/api/registrations`, {
-          credentials: 'include'
-        });
-        if (!res.ok) {
-          const err = await res.json();
-          alert(err.message || '讀取失敗');
-          return;
-        }
-        const list = await res.json();
-        list.forEach(item => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item._id || item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.score ?? ''}</td>
-            <td><input type="number" value="${item.score ?? ''}" id="score-${item._id || item.id}" /></td>
-            <td>
-              <button data-id="${item._id || item.id}" class="btn-update">更新</button>
-              <button data-id="${item._id || item.id}" class="btn-delete">刪除</button>
-            </td>
-          `;
-          tblBody.appendChild(tr);
-        });
-
-        // 綁定更新按鈕
-        document.querySelectorAll('.btn-update').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            const input = document.getElementById(`score-${id}`);
-            const newScore = input.value;
-            if (newScore === '') {
-              alert('請輸入分數');
-              return;
-            }
-            const updRes = await fetch(`${API_BASE}/api/registrations/${id}/score`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'include',
-              body: JSON.stringify({ score: Number(newScore) })
-            });
-            if (!updRes.ok) {
-              const err = await updRes.json();
-              alert(err.message || '更新失敗');
-              return;
-            }
-            alert('已更新分數');
-            loadRegistrations();
-          });
-        });
-
-        // 綁定刪除按鈕
-        document.querySelectorAll('.btn-delete').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            if (!confirm('確定要刪除此參賽者？')) return;
-            const id = btn.dataset.id;
-            const delRes = await fetch(`${API_BASE}/api/registrations/${id}`, {
-              method: 'DELETE',
-              credentials: 'include'
-            });
-            if (!delRes.ok) {
-              const err = await delRes.json();
-              alert(err.message || '刪除失敗');
-              return;
-            }
-            alert('已刪除參賽者');
-            loadRegistrations();
-          });
-        });
-
-      } catch (err) {
-        alert('網路連線錯誤');
-      }
-    }
-  </script>
+  <script src="admin.js"></script>
 </body>
 </html>
