@@ -4,40 +4,106 @@ const session = require('express-session');
 const bcrypt  = require('bcrypt');
 const fs      = require('fs');
 const path    = require('path');
-const db      = require('./dbConnect');
+const getDb   = require('./dbConnect'); // 或 db.query 方案
 
 const app = express();
 app.use(express.json());
-app.use(session({ 
-  secret: process.env.SESSION_SECRET, 
-  resave: false, 
-  saveUninitialized: false 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
 }));
 
-// ... 中介層 ensureLogin、ensureFull 如前 …
+// ─── 在此處貼上中介層函式 ───
+function ensureLogin(req, res, next) {
+  if (!req.session || !req.session.username) {
+    return res.status(401).json({ message: '請先登入' });
+  }
+  next();
+}
+function ensureFull(req, res, next) {
+  if (req.session.role !== 'full') {
+    return res.status(403).json({ message: '權限不足' });
+  }
+  next();
+}
+// ────────────────────────
 
-// 登入、登出如前 …
+// 登入路由（必須先有 ensureLogin 定義在前）
+app.post('/api/admin/login', async (req, res) => {
+  const { username, password } = req.body;
+  const cfg    = JSON.parse(fs.readFileSync(path.join(__dirname, 'config', 'admins.json')));
+  const admins = cfg.admins;
+  const admin  = admins.find(a => a.username === username);
+  if (!admin) return res.status(401).json({ message: '帳號或密碼錯誤' });
 
-// 只留一組：用資料庫去讀所有報名
+  const ok = await bcrypt.compare(password, admin.passwordHash);
+  if (!ok) return res.status(401).json({ message: '帳號或密碼錯誤' });
+  
+  // 驗證成功，寫入 session
+  req.session.username = admin.username;
+  req.session.role     = admin.role;
+  res.json({ message: '登入成功', role: admin.role });
+});
+
+// 登出路由
+app.post('/api/admin/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) return res.status(500).json({ message: '登出失敗' });
+    res.json({ message: '已登出' });
+  });
+});
+
+// 下面所有 /api/registrations 路由都必須在 ensureLogin, ensureFull 定義之後
+
+// 讀取所有報名：任何已登入者可
 app.get('/api/registrations', ensureLogin, async (req, res) => {
   try {
-    const rows = await db.query('SELECT id, name, score FROM registrations');
+    const db  = await getDb();
+    const rows = await db.collection('registrations').find().toArray();
     res.json(rows);
   } catch (err) {
     res.status(500).json({ message: '讀取失敗', error: err.message });
   }
 });
 
-// 刪除（full 權限）
+// 刪除報名：只有 full 權限
 app.delete('/api/registrations/:id', ensureLogin, ensureFull, async (req, res) => {
-  // ... 同上 …
+  try {
+    const db = await getDb();
+    const result = await db
+      .collection('registrations')
+      .deleteOne({ _id: new require('mongodb').ObjectId(req.params.id) });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: '找不到該筆資料' });
+    }
+    res.json({ message: `已刪除 id=${req.params.id}` });
+  } catch (err) {
+    res.status(500).json({ message: '刪除失敗', error: err.message });
+  }
 });
 
-// 更新成績
+// 更新分數：任何已登入者可
 app.put('/api/registrations/:id/score', ensureLogin, async (req, res) => {
-  // ... 同上 …
+  const { score } = req.body;
+  try {
+    const db = await getDb();
+    const result = await db
+      .collection('registrations')
+      .updateOne(
+        { _id: new require('mongodb').ObjectId(req.params.id) },
+        { $set: { score } }
+      );
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: '找不到該筆資料' });
+    }
+    res.json({ message: `已更新 id=${req.params.id} 的分數` });
+  } catch (err) {
+    res.status(500).json({ message: '更新失敗', error: err.message });
+  }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Server running');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log('Server running on port', PORT);
 });
