@@ -1,20 +1,25 @@
+// app.js
 require('dotenv').config();
-const express = require('express');
-const session = require('express-session');
-const bcrypt  = require('bcrypt');
-const fs      = require('fs');
-const path    = require('path');
-const getDb   = require('./dbConnect'); // 或 db.query 方案
+const express    = require('express');
+const session    = require('express-session');
+const bcrypt     = require('bcrypt');
+const fs         = require('fs');
+const path       = require('path');
+// 確保只寫一次下面這行，別再重複宣告
+const { ObjectId } = require('mongodb');
+const getDb      = require('./dbConnect');
 
 const app = express();
 app.use(express.json());
+// ─── 新增這行：告訴 Express 將 public 資料夾當作靜態資源提供 ───
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
 }));
 
-// ─── 在此處貼上中介層函式 ───
+// ─── 中介層：檢查是否已登入 ─────────────────
 function ensureLogin(req, res, next) {
   if (!req.session || !req.session.username) {
     return res.status(401).json({ message: '請先登入' });
@@ -27,9 +32,9 @@ function ensureFull(req, res, next) {
   }
   next();
 }
-// ────────────────────────
+// ──────────────────────────────────────────
 
-// 登入路由（必須先有 ensureLogin 定義在前）
+// 登入路由
 app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
   const cfg    = JSON.parse(fs.readFileSync(path.join(__dirname, 'config', 'admins.json')));
@@ -54,44 +59,26 @@ app.post('/api/admin/logout', (req, res) => {
   });
 });
 
-// 下面所有 /api/registrations 路由都必須在 ensureLogin, ensureFull 定義之後
-
-// 讀取所有報名：任何已登入者可
-app.get('/api/registrations', ensureLogin, async (req, res) => {
+// 讀取所有分數：任何已登入者可
+app.get('/api/scores', ensureLogin, async (req, res) => {
   try {
-    const db  = await getDb();
-    const rows = await db.collection('registrations').find().toArray();
+    const db   = await getDb();
+    const rows = await db.collection('scores').find().toArray();
     res.json(rows);
   } catch (err) {
     res.status(500).json({ message: '讀取失敗', error: err.message });
   }
 });
 
-// 刪除報名：只有 full 權限
-app.delete('/api/registrations/:id', ensureLogin, ensureFull, async (req, res) => {
-  try {
-    const db = await getDb();
-    const result = await db
-      .collection('registrations')
-      .deleteOne({ _id: new require('mongodb').ObjectId(req.params.id) });
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: '找不到該筆資料' });
-    }
-    res.json({ message: `已刪除 id=${req.params.id}` });
-  } catch (err) {
-    res.status(500).json({ message: '刪除失敗', error: err.message });
-  }
-});
-
 // 更新分數：任何已登入者可
-app.put('/api/registrations/:id/score', ensureLogin, async (req, res) => {
+app.put('/api/scores/:id/score', ensureLogin, async (req, res) => {
   const { score } = req.body;
   try {
     const db = await getDb();
     const result = await db
-      .collection('registrations')
+      .collection('scores')
       .updateOne(
-        { _id: new require('mongodb').ObjectId(req.params.id) },
+        { _id: new ObjectId(req.params.id) },
         { $set: { score } }
       );
     if (result.matchedCount === 0) {
@@ -100,6 +87,22 @@ app.put('/api/registrations/:id/score', ensureLogin, async (req, res) => {
     res.json({ message: `已更新 id=${req.params.id} 的分數` });
   } catch (err) {
     res.status(500).json({ message: '更新失敗', error: err.message });
+  }
+});
+
+// 刪除分數：只有 full 權限
+app.delete('/api/scores/:id', ensureLogin, ensureFull, async (req, res) => {
+  try {
+    const db = await getDb();
+    const result = await db
+      .collection('scores')
+      .deleteOne({ _id: new ObjectId(req.params.id) });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: '找不到該筆資料' });
+    }
+    res.json({ message: `已刪除 id=${req.params.id}` });
+  } catch (err) {
+    res.status(500).json({ message: '刪除失敗', error: err.message });
   }
 });
 
