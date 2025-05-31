@@ -17,6 +17,10 @@ app.use(session({
   saveUninitialized: false,
 }));
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // ─── 中介層：檢查是否已登入 ─────────────────
 function ensureLogin(req, res, next) {
   if (!req.session || !req.session.username) {
