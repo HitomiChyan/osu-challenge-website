@@ -1,0 +1,4 @@
+[
+  { "id": 1, "name": "選手A", "score": null },
+  { "id": 2, "name": "選手B", "score": 12345 }
+]

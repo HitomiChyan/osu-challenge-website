@@ -1,24 +1,43 @@
-// app.js
+require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const bcrypt  = require('bcrypt');
 const fs      = require('fs');
-const app     = express();
+const path    = require('path');
+const db      = require('./dbConnect');
 
+const app = express();
 app.use(express.json());
-// 讀 admins.json
-const { admins } = JSON.parse(fs.readFileSync('config/admins.json'));
+app.use(session({ 
+  secret: process.env.SESSION_SECRET, 
+  resave: false, 
+  saveUninitialized: false 
+}));
 
-// --- middleware 定義 ---
-function ensureLogin(req, res, next) { … }
-function ensureFull(req, res, next) { … }
+// ... 中介層 ensureLogin、ensureFull 如前 …
 
-// --- 登入路由 ---
-app.post('/api/admin/login', async (req, res) => { … });
+// 登入、登出如前 …
 
-// --- 報名表路由 ---
-app.get  ('/api/registrations',         ensureLogin,        (req,res)=>{…});
-app.put  ('/api/registrations/:id/score', ensureLogin,       (req,res)=>{…});
-app.delete('/api/registrations/:id',     ensureLogin, ensureFull, (req,res)=>{…});
+// 只留一組：用資料庫去讀所有報名
+app.get('/api/registrations', ensureLogin, async (req, res) => {
+  try {
+    const rows = await db.query('SELECT id, name, score FROM registrations');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: '讀取失敗', error: err.message });
+  }
+});
 
-// 啟動服務
-app.listen(3000, ()=> console.log('Server on port 3000'));
+// 刪除（full 權限）
+app.delete('/api/registrations/:id', ensureLogin, ensureFull, async (req, res) => {
+  // ... 同上 …
+});
+
+// 更新成績
+app.put('/api/registrations/:id/score', ensureLogin, async (req, res) => {
+  // ... 同上 …
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server running');
+});
