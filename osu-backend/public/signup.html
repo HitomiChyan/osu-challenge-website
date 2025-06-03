@@ -1,3 +1,78 @@
-<h2>報名方法</h2>
-<p>請依下列步驟完成報名...</p>
-<iframe src="https://docs.google.com/forms/你的表單ID/viewform" width="100%" height="800px"></iframe>
+<link rel="stylesheet" href="/styles/style.css" />
+        <!-- 新功能按鈕 -->
+        <div class="button-container">
+          <button onclick="location.href='/index.html'">🏠 活動首頁</button>          
+          <button onclick="location.href='/register.html'">✏️ 我要報名</button>
+          <button onclick="location.href='/results.html'">📊 挑戰結果</button>
+          <button onclick="location.href='/tickets.html'">🏆 獎勵查詢</button>         
+        </div>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>活動規則</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="stylesheet" href="/styles/admin-custom.css" />
+</head>
+<body>
+<!-- 活動主題區塊，可以直接插在你的 index.html content 區 -->
+<div class="event-banner">
+  <h2>🏆 蘭喵夢想盃五週年圖譜挑戰活動</h2>
+  <div class="event-period">📅 報名期間：即日起 ～ 2025/08/15</div>
+  
+  <h3>🎯 挑戰規則</h3>
+  <ul>
+    <li>📝 <b>報名期間：</b> 即刻起至 <b>2025/08/15</b></li>
+    <li>🕓 <b>圖譜釋出：</b> <b>2025/08/10</b> (屆時將自動開放連結)</li>
+    <li>🟢 <b>開放挑戰：</b> 2025/08/10～2025/08/15（限開台時）</li>
+    <li>🔒 <b>僅限 NM+NF 模式挑戰，一人限挑戰三次</b>（一天內挑戰完畢）</li>
+  </ul>
+
+  <h3>🌈 挑戰分組與獎勵</h3>
+  <ul>
+    <li><b>3Digit</b>
+      <ul>
+        <li>3Digit 以下皆可挑戰，報名時註明 Digit</li>
+        <li>FC+SS：<b>5張抽獎券</b>　FC：<b>3張抽獎券</b></li>
+        <li id="map-3digit" style="display:none;">
+          🔗 <a href="https://example.com/map-3digit" target="_blank">[3Digit 圖譜連結]</a>
+        </li>
+      </ul>
+    </li>
+    <li><b>4Digit</b>
+      <ul>
+        <li>4Digit 以下皆可挑戰，報名時註明 Digit</li>
+        <li>FC+SS：<b>4張抽獎券</b>　FC：<b>2張抽獎券</b></li>
+        <li id="map-4digit" style="display:none;">
+          🔗 <a href="https://example.com/map-4digit" target="_blank">[4Digit 圖譜連結]</a>
+        </li>
+      </ul>
+    </li>
+    <li><b>5Digit</b>
+      <ul>
+        <li>5Digit 以下皆可挑戰，報名時註明 Digit</li>
+        <li>FC+SS：<b>3張抽獎券</b>　FC：<b>1張抽獎券</b></li>
+        <li id="map-5digit" style="display:none;">
+          🔗 <a href="https://example.com/map-5digit" target="_blank">[5Digit 圖譜連結]</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<!-- 你的活動公告區塊都在前面 -->
+
+<!-- 解鎖圖譜連結的 JS，放這裡 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 設定釋放圖譜的時間（2025/08/10 00:00:00）
+  const unlockTime = new Date('2025-08-10T00:00:00+08:00').getTime();
+  const now = Date.now();
+  if (now >= unlockTime) {
+    document.getElementById('map-3digit').style.display = '';
+    document.getElementById('map-4digit').style.display = '';
+    document.getElementById('map-5digit').style.display = '';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>抽獎券數量查詢</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="stylesheet" href="/styles/admin-custom.css" />
+</head>
+<body>
+  <h1>抽獎券數量查詢</h1>
+
+  <!-- 🌟 新功能按鈕 -->
+  <div class="button-container" style="text-align:center; margin-bottom: 24px;">
+    <button onclick="location.href='/index.html'">🏠 活動首頁</button>
+    <button onclick="location.href='/signup.html'">📋 活動規則</button>
+    <button onclick="location.href='/register.html'">✏️ 我要報名</button>
+    <button onclick="location.href='/results.html'">📊 挑戰結果</button>                  
+  </div>
+
+  <!-- 🔍 搜尋 Twitch ID -->
+  <div class="search-container">
+    <label>搜尋 Twitch ID：<input type="text" id="search-box" /></label>
+  </div>
+
+  <!-- 📋 抽獎券數據表 -->
+  <table id="tbl-tickets">
+    <thead>
+      <tr>
+        <th>Twitch 中文名稱</th>
+        <th>Twitch ID</th>
+        <th>活動名稱</th>
+        <th>身分</th>
+        <th>總計抽獎券</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <p id="status-msg" style="text-align:center;color:#c00;margin-top:24px;"></p>
+
+  <script>
+    const API_BASE = location.origin;
+    const searchBox = document.getElementById('search-box');
+    const tblTickets = document.querySelector('#tbl-tickets tbody');
+    const statusMsg = document.getElementById('status-msg');
+    let allTickets = [];
+
+    async function fetchTickets() {
+      try {
+        statusMsg.textContent = '';
+
+        // 🎯 抓取挑戰者資料
+        const regRes = await fetch(`${API_BASE}/api/registrations`, { credentials: 'include' });
+        const regs = regRes.ok ? await regRes.json() : [];
+
+        // 🎯 抓取非挑戰者資料
+        const ncRes = await fetch(`${API_BASE}/api/nonchallengers`, { credentials: 'include' });
+        const ncs = ncRes.ok ? await ncRes.json() : [];
+
+        // 🌟 整理挑戰者與非挑戰者資料
+        const regsRows = regs
+          .filter(x => (x.totalTickets || 0) > 0)
+          .map(x => ({
+            twitchName: x.twitchName || '',
+            twitchID: x.twitchID || '',
+            activityName: x.activityName || '',
+            identity: x.identity || '挑戰者',
+            totalTickets: x.totalTickets || 0
+          }));
+
+        const ncsRows = ncs
+          .filter(x => (x.totalTickets || 0) > 0)
+          .map(x => ({
+            twitchName: x.twitchName || '',
+            twitchID: x.twitchID || '',
+            activityName: x.activityName || '',
+            identity: '非挑戰者',
+            totalTickets: x.totalTickets || 0
+          }));
+
+        // 🔥 合併所有資料
+        allTickets = [...regsRows, ...ncsRows];
+        renderTickets();
+      } catch (e) {
+        statusMsg.textContent = e.message || '資料載入失敗';
+      }
+    }
+
+    function renderTickets() {
+      const keyword = searchBox.value.trim().toLowerCase();
+      tblTickets.innerHTML = '';
+      allTickets
+        .filter(item => !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword)))
+        .forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.twitchName}</td>
+            <td>${item.twitchID}</td>
+            <td>${item.activityName}</td>
+            <td>${item.identity}</td>
+            <td>${item.totalTickets}</td>
+          `;
+          tblTickets.appendChild(tr);
+        });
+
+      if (tblTickets.innerHTML === '') {
+        tblTickets.innerHTML = `<tr><td colspan="5" style="color:#888;">查無資料</td></tr>`;
+      }
+    }
+
+    searchBox.addEventListener('input', renderTickets);
+    window.addEventListener('DOMContentLoaded', fetchTickets);
+  </script>
+</body>
+</html>
