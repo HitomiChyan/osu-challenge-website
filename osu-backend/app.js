@@ -18,7 +18,7 @@ app.use(cors({
 }));
 
 // 2. 靜態資源設定
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 // 3. 解析 JSON 請求
 app.use(express.json());
