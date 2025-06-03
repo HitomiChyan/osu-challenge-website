@@ -14,7 +14,6 @@ const app = express();
 // 1. CORS（一定要放 app.use(express.static) 之前）
 app.use(cors({
   origin: ['http://localhost:5500', 'https://hitomichyan.github.io'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 

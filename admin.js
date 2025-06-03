@@ -87,12 +87,12 @@ btnLogin.addEventListener('click', async () => {
     return;
   }
   try {
-    const res = await fetch(`${API_BASE}/api/admin/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ username, password })
-    });
+    const res = await fetch('https://your-api-host.com/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username: 'HitomiCyan0820', password: 'Card1130756' })
+})
     const data = await res.json();
     if (!res.ok) {
       loginError.textContent = data.message || '登入失敗';
@@ -167,12 +167,12 @@ regForm.addEventListener('submit', async (e) => {
     manualTickets: Number(document.getElementById('add-manual').value) || 0,
   };
   try {
-    const res = await fetch(`${API_BASE}/api/registrations`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bodyObj)
-    });
+    const res = await fetch('https://your-api-host.com/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username: 'HitomiCyan0820', password: 'Card1130756' })
+})
     const data = await res.json();
     if (!res.ok) { alert(data.message || '新增失敗'); return; }
     alert('新增成功');
@@ -197,12 +197,12 @@ ncForm.addEventListener('submit', async (e) => {
   };
   if (!bodyObj.activityName) { alert('活動名稱必填'); return; }
   try {
-    const res = await fetch(`${API_BASE}/api/nonchallengers`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bodyObj)
-    });
+    const res = await fetch('https://your-api-host.com/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username: 'HitomiCyan0820', password: 'Card1130756' })
+})
     const data = await res.json();
     if (!res.ok) { alert(data.message || '新增失敗'); return; }
     alert('新增成功');
@@ -316,12 +316,12 @@ window.updateRow = async function(id, type) {
       manualTickets: Number(manualTickets) || 0
     };
     try {
-      const res = await fetch(`${API_BASE}/api/registrations/${id}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyObj)
-      });
+      const res = await fetch('https://your-api-host.com/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username: 'HitomiCyan0820', password: 'Card1130756' })
+})
       const resp = await res.json();
       if (!res.ok) return alert(resp.message || '更新失敗');
       alert('更新成功');
@@ -345,12 +345,12 @@ window.updateRow = async function(id, type) {
       note,
     };
     try {
-      const res = await fetch(`${API_BASE}/api/nonchallengers/${id}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyObj)
-      });
+      const res = await fetch('https://your-api-host.com/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username: 'HitomiCyan0820', password: 'Card1130756' })
+})
       const resp = await res.json();
       if (!res.ok) return alert(resp.message || '更新失敗');
       alert('更新成功');
