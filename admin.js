@@ -1,5 +1,6 @@
 let currentRole = null;
 let activities = ['五週年'];
+let adminCredentials = null;
 
 const loginSection     = document.getElementById('login-section');
 const dashboardSection = document.getElementById('dashboard-section');
