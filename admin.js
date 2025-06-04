@@ -14,7 +14,7 @@ const btnTabNonChall   = document.getElementById('btn-tab-nonchallengers');
 const tblRegsBody      = document.querySelector('#tbl-registrations tbody');
 const tblNonChallBody  = document.querySelector('#tbl-nonchallengers tbody');
 const searchBox        = document.getElementById('search-box');
-const API_BASE = 'http://localhost:3000';
+const API_BASE = window.API_BASE || location.origin;
 
 // sidebar (報名)
 const btnShowAddReg   = document.getElementById('show-add-registration');
@@ -88,14 +88,12 @@ btnLogin.addEventListener('click', async () => {
     return;
   }
   try {
-    adminCredentials = { username, password };
     const res = await fetch(`${API_BASE}/api/admin/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(adminCredentials)
+      body: JSON.stringify({ username, password })
     });
-
     const data = await res.json();
     if (!res.ok) {
       loginError.textContent = data.message || '登入失敗';
@@ -170,11 +168,11 @@ regForm.addEventListener('submit', async (e) => {
     manualTickets: Number(document.getElementById('add-manual').value) || 0,
   };
   try {
-    const res = await fetch(`${API_BASE}/api/admin/login`, {
+    const res = await fetch(`${API_BASE}/api/registrations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(adminCredentials)
+      body: JSON.stringify(bodyObj)
     });
     const data = await res.json();
     if (!res.ok) { alert(data.message || '新增失敗'); return; }
@@ -200,11 +198,11 @@ ncForm.addEventListener('submit', async (e) => {
   };
   if (!bodyObj.activityName) { alert('活動名稱必填'); return; }
   try {
-    const res = await fetch(`${API_BASE}/api/admin/login`, {
+    const res = await fetch(`${API_BASE}/api/nonchallengers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify(adminCredentials)
+      body: JSON.stringify(bodyObj)
     });
     const data = await res.json();
     if (!res.ok) { alert(data.message || '新增失敗'); return; }
@@ -319,11 +317,11 @@ window.updateRow = async function(id, type) {
       manualTickets: Number(manualTickets) || 0
     };
     try {
-      const res = await fetch(`${API_BASE}/api/admin/login`, {
-        method: 'POST',
+      const res = await fetch(`${API_BASE}/api/registrations/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(adminCredentials)
+        body: JSON.stringify(bodyObj)
       });
       const resp = await res.json();
       if (!res.ok) return alert(resp.message || '更新失敗');
@@ -348,11 +346,11 @@ window.updateRow = async function(id, type) {
       note,
     };
     try {
-      const res = await fetch(`${API_BASE}/api/admin/login`, {
-        method: 'POST',
+      const res = await fetch(`${API_BASE}/api/nonchallengers/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify(adminCredentials)
+        body: JSON.stringify(bodyObj)
       });
       const resp = await res.json();
       if (!res.ok) return alert(resp.message || '更新失敗');
