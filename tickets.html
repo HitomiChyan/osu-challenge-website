@@ -45,19 +45,7 @@
     const statusMsg = document.getElementById('status-msg');
     let allTickets = [];
 
-    async function fetchTickets() {
-      try {
-        statusMsg.textContent = '';
-
-        // 🎯 抓取挑戰者資料
-        const regRes = await fetch(`${API_BASE}/api/registrations`, { credentials: 'include' });
-        const regs = regRes.ok ? await regRes.json() : [];
-
-        // 🎯 抓取非挑戰者資料
-        const ncRes = await fetch(`${API_BASE}/api/nonchallengers`, { credentials: 'include' });
-        const ncs = ncRes.ok ? await ncRes.json() : [];
-
-        // 🌟 整理挑戰者與非挑戰者資料
+            // 🌟 整理挑戰者與非挑戰者資料
         const regsRows = regs
           .filter(x => (x.totalTickets || 0) > 0)
           .map(x => ({
