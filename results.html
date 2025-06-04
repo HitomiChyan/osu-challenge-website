@@ -40,6 +40,15 @@
     const searchBox = document.getElementById('search-box');
     const tblResults = document.querySelector('#tbl-results tbody');
 
+    async function fetchData() {
+      try {
+        statusMsg.textContent = '';
+        const regsRes = await fetch('data/registrations.json');
+        if (!regsRes.ok) throw new Error('資料載入失敗');
+        allRegistrations = await regsRes.json();
+        renderTable();
+      } catch (e) {
+        statusMsg.textContent = e.message || '資料載入失敗';
     // 靜態資料，可由 Google Sheet 匯出後更新
     const allRegistrations = [
       {
