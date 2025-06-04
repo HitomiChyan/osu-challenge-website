@@ -39,6 +39,8 @@
   <script>
     const searchBox = document.getElementById('search-box');
     const tblResults = document.querySelector('#tbl-results tbody');
+    const statusMsg = document.getElementById('status-msg');
+    let allRegistrations = [];
 
     async function fetchData() {
       try {
@@ -46,28 +48,11 @@
         const regsRes = await fetch('data/registrations.json');
         if (!regsRes.ok) throw new Error('資料載入失敗');
         allRegistrations = await regsRes.json();
-        renderTable();
       } catch (e) {
         statusMsg.textContent = e.message || '資料載入失敗';
-    // 靜態資料，可由 Google Sheet 匯出後更新
-    const allRegistrations = [
-      {
-        twitchName: '示例一',
-        twitchID: 'example1',
-        activityName: '活動 A',
-        rank: 'S',
-        time: '01:23',
-        results: ['100%', '95%', '90%']
-      },
-      {
-        twitchName: '示例二',
-        twitchID: 'example2',
-        activityName: '活動 B',
-        rank: 'A',
-        time: '02:10',
-        results: ['92%', '88%', '85%']
       }
-    ];
+      renderTable();
+    }
 
     function renderTable() {
       const keyword = searchBox.value.trim().toLowerCase();
@@ -95,23 +80,6 @@
           const td = document.createElement('td');
           td.textContent = text;
           tr.appendChild(td);
-      allRegistrations
-        .filter(item =>
-          !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword))
-        )
-        .forEach(item => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.twitchName || ''}</td>
-            <td>${item.twitchID || ''}</td>
-            <td>${item.activityName || ''}</td>
-            <td>${item.rank || ''}</td>
-            <td>${item.time || ''}</td>
-            <td>${item.results?.[0] || ''}</td>
-            <td>${item.results?.[1] || ''}</td>
-            <td>${item.results?.[2] || ''}</td>
-          `;
-          tblResults.appendChild(tr);
         });
         tblResults.appendChild(tr);
       });
@@ -126,8 +94,9 @@
         tblResults.appendChild(tr);
       }
     }
+
     searchBox.addEventListener('input', renderTable);
-    window.addEventListener('DOMContentLoaded', renderTable);
+    window.addEventListener('DOMContentLoaded', fetchData);
   </script>
 </body>
 </html>
