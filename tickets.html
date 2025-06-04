@@ -4,137 +4,36 @@
   <meta charset="UTF-8" />
   <title>抽獎券數量查詢</title>
   <link rel="stylesheet" href="styles/style.css" />
-  <link rel="stylesheet" href="styles/admin-custom.css" />
+  <style>
+    .form-wrapper {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(109, 76, 65, 0.93);
+      border-radius: 16px;
+      box-shadow: 0 4px 28px rgba(52, 28, 10, 0.16);
+      color: #ffe7c5;
+    }
+    .form-wrapper iframe {
+      width: 100%;
+      height: 1000px;
+      border: none;
+      background-color: transparent;
+    }
+  </style>
 </head>
 <body>
-  <h1>抽獎券數量查詢</h1>
-
-  <!-- 🌟 新功能按鈕 -->
   <div class="button-container" style="text-align:center; margin-bottom: 24px;">
     <button onclick="location.href='index.html'">🏠 活動首頁</button>
     <button onclick="location.href='signup.html'">📋 活動規則</button>
     <button onclick="location.href='register.html'">✏️ 我要報名</button>
-    <button onclick="location.href='results.html'">📊 挑戰結果</button>                  
+    <button onclick="location.href='results.html'">📊 挑戰結果</button>
   </div>
-
-  <!-- 🔍 搜尋 Twitch ID -->
-  <div class="search-container">
-    <label>搜尋 Twitch ID：<input type="text" id="search-box" /></label>
+  <h1>抽獎券數量查詢</h1>
+  <div class="form-wrapper">
+    <iframe src="https://docs.google.com/spreadsheets/d/1hRT9fDT2F1MBBN79qs0REroWgpByzsBc6JRhGeGE9MU/pubhtml?gid=479731769&amp;single=true&amp;widget=true&amp;headers=false" allowfullscreen>
+      查看 Google 試算表
+    </iframe>
   </div>
-
-  <!-- 📋 抽獎券數據表 -->
-  <table id="tbl-tickets">
-    <thead>
-      <tr>
-        <th>Twitch 中文名稱</th>
-        <th>Twitch ID</th>
-        <th>活動名稱</th>
-        <th>身分</th>
-        <th>總計抽獎券</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <p id="status-msg" style="text-align:center;color:#c00;margin-top:24px;"></p>
-
-  <script>
-    const searchBox = document.getElementById('search-box');
-    const tblTickets = document.querySelector('#tbl-tickets tbody');
-    const statusMsg = document.getElementById('status-msg');
-    let allTickets = [];
-
-    async function fetchTickets() {
-      try {
-        statusMsg.textContent = '';
-
-        // 取得報名資料（可替換為 Google Sheet Endpoint）
-        const res = await fetch('data/registrations.json');
-        if (!res.ok) throw new Error('資料載入失敗');
-        const regs = await res.json();
-
-        // 計算每位報名者的抽獎券數量
-        allTickets = regs
-          .map(reg => ({
-            twitchName: reg.twitchName || '',
-            twitchID: reg.twitchID || '',
-            activityName: reg.activityName || '',
-            identity: reg.identity || '挑戰者',
-            totalTickets: calcTickets(reg)
-          }))
-          .filter(x => x.totalTickets > 0);
-        renderTickets();
-      } catch (e) {
-        statusMsg.textContent = e.message || '資料載入失敗';
-      }
-    }
-
-    function calcTickets(reg) {
-      const results = reg.results || [];
-      const rank = String(reg.rank || '').toLowerCase();
-      const scoreMap = {
-        '3digit': { fc: 3, ss: 5 },
-        '4digit': { fc: 2, ss: 4 },
-        '5digit': { fc: 1, ss: 3 }
-      };
-      const rule =
-        rank.includes('3digit')
-          ? scoreMap['3digit']
-          : rank.includes('4digit')
-          ? scoreMap['4digit']
-          : scoreMap['5digit'];
-      return results.reduce((sum, r) => {
-        if (r === 'FC+SS') return sum + rule.ss;
-        if (r === 'FC') return sum + rule.fc;
-        return sum;
-      }, 0);
-    }
-
-    function renderTickets() {
-      const keyword = searchBox.value.trim().toLowerCase();
-      tblTickets.innerHTML = '';
-
-      allTickets
-        .filter(item => !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword)))
-        .forEach(item => {
-          const tr = document.createElement('tr');
-
-          const tdName = document.createElement('td');
-          tdName.textContent = item.twitchName;
-          tr.appendChild(tdName);
-
-          const tdID = document.createElement('td');
-          tdID.textContent = item.twitchID;
-          tr.appendChild(tdID);
-
-          const tdActivity = document.createElement('td');
-          tdActivity.textContent = item.activityName;
-          tr.appendChild(tdActivity);
-
-          const tdIdentity = document.createElement('td');
-          tdIdentity.textContent = item.identity;
-          tr.appendChild(tdIdentity);
-
-          const tdTickets = document.createElement('td');
-          tdTickets.textContent = item.totalTickets;
-          tr.appendChild(tdTickets);
-
-          tblTickets.appendChild(tr);
-        });
-
-      if (!tblTickets.firstChild) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 5;
-        td.style.color = '#888';
-        td.textContent = '查無資料';
-        tr.appendChild(td);
-        tblTickets.appendChild(tr);
-      }
-    }
-
-    searchBox.addEventListener('input', renderTickets);
-    window.addEventListener('DOMContentLoaded', fetchTickets);
-  </script>
 </body>
 </html>
