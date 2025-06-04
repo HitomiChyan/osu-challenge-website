@@ -148,40 +148,8 @@
       const rank         = document.getElementById('rank').value;
       const time         = document.getElementById('time').value;
 
-      if (!twitchName || !twitchID || !osuID) {
-        document.getElementById('error').textContent = '請填寫所有必要欄位';
-        return;
-      }
+      window.location.href = "https://forms.gle/example";
 
-      try {
-        const resp = await fetch('/api/registrations', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            activityName,
-            identity,
-            twitchName,
-            twitchID,
-            osuID,
-            rank,
-            time
-          })
-        });
-        const data = await resp.json();
-        if (!resp.ok) {
-          document.getElementById('error').textContent = data.message || '提交失敗';
-          return;
-        }
-        document.getElementById('msg').textContent = '報名成功！';
-        // 清空表單（隱藏欄位不清）
-        document.getElementById('twitchName').value = '';
-        document.getElementById('twitchID').value   = '';
-        document.getElementById('osuID').value      = '';
-        document.getElementById('rank').selectedIndex = 0;
-        document.getElementById('time').selectedIndex = 0;
-      } catch (err) {
-        document.getElementById('error').textContent = '網路錯誤，請稍後再試';
-      }
     });
   </script>
 </body>
