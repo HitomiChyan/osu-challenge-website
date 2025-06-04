@@ -89,22 +89,43 @@
     function renderTickets() {
       const keyword = searchBox.value.trim().toLowerCase();
       tblTickets.innerHTML = '';
+
       allTickets
         .filter(item => !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword)))
         .forEach(item => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.twitchName}</td>
-            <td>${item.twitchID}</td>
-            <td>${item.activityName}</td>
-            <td>${item.identity}</td>
-            <td>${item.totalTickets}</td>
-          `;
+
+          const tdName = document.createElement('td');
+          tdName.textContent = item.twitchName;
+          tr.appendChild(tdName);
+
+          const tdID = document.createElement('td');
+          tdID.textContent = item.twitchID;
+          tr.appendChild(tdID);
+
+          const tdActivity = document.createElement('td');
+          tdActivity.textContent = item.activityName;
+          tr.appendChild(tdActivity);
+
+          const tdIdentity = document.createElement('td');
+          tdIdentity.textContent = item.identity;
+          tr.appendChild(tdIdentity);
+
+          const tdTickets = document.createElement('td');
+          tdTickets.textContent = item.totalTickets;
+          tr.appendChild(tdTickets);
+
           tblTickets.appendChild(tr);
         });
 
-      if (tblTickets.innerHTML === '') {
-        tblTickets.innerHTML = `<tr><td colspan="5" style="color:#888;">查無資料</td></tr>`;
+      if (!tblTickets.firstChild) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 5;
+        td.style.color = '#888';
+        td.textContent = '查無資料';
+        tr.appendChild(td);
+        tblTickets.appendChild(tr);
       }
     }
 
