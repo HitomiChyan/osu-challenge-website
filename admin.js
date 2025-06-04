@@ -87,12 +87,16 @@ btnLogin.addEventListener('click', async () => {
     return;
   }
   try {
-    const res = await fetch('https://your-api-host.com/api/admin/login', {
+    const res = await fetch('http://localhost:3000/api/admin/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
     body: JSON.stringify({ username: 'HitomiCyan0820', password: 'Card1130756' })
 })
+.then(response => response.json())
+.then(data => console.log(data)) // 確保這裡的 console.log(data) 可以顯示正確結果
+.catch(error => console.error('Error:', error));
+
     const data = await res.json();
     if (!res.ok) {
       loginError.textContent = data.message || '登入失敗';

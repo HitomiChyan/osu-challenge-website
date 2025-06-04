@@ -13,10 +13,10 @@ const app = express();
 
 // 1. CORS（一定要放 app.use(express.static) 之前）
 app.use(cors({
-  origin: ['http://localhost:5500', 'https://hitomichyan.github.io'],
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
-
 
 // 2. 靜態資源設定
 app.use(express.static(__dirname));
@@ -308,3 +308,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('Server running on port', PORT);
 });
+
