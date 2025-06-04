@@ -58,27 +58,41 @@
     function renderTable() {
       const keyword = searchBox.value.trim().toLowerCase();
       tblResults.innerHTML = '';
-      allRegistrations
+      const rows = allRegistrations
         .filter(item => item.identity === '挑戰者')
-        .filter(item =>
-          !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword))
-        )
-        .forEach(item => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.twitchName || ''}</td>
-            <td>${item.twitchID || ''}</td>
-            <td>${item.activityName || ''}</td>
-            <td>${item.rank || ''}</td>
-            <td>${item.time || ''}</td>
-            <td>${item.results?.[0] || ''}</td>
-            <td>${item.results?.[1] || ''}</td>
-            <td>${item.results?.[2] || ''}</td>
-          `;
-          tblResults.appendChild(tr);
+        .filter(
+          item =>
+            !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword))
+        );
+
+      rows.forEach(item => {
+        const tr = document.createElement('tr');
+        const cells = [
+          item.twitchName || '',
+          item.twitchID || '',
+          item.activityName || '',
+          item.rank || '',
+          item.time || '',
+          item.results?.[0] || '',
+          item.results?.[1] || '',
+          item.results?.[2] || ''
+        ];
+        cells.forEach(text => {
+          const td = document.createElement('td');
+          td.textContent = text;
+          tr.appendChild(td);
         });
-      if (tblResults.innerHTML === '') {
-        tblResults.innerHTML = `<tr><td colspan="8" style="color:#888;">查無資料</td></tr>`;
+        tblResults.appendChild(tr);
+      });
+
+      if (!tblResults.childElementCount) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 8;
+        td.textContent = '查無資料';
+        td.style.color = '#888';
+        tr.appendChild(td);
+        tblResults.appendChild(tr);
       }
     }
     searchBox.addEventListener('input', renderTable);
