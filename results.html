@@ -37,7 +37,7 @@
   </table>
   <p id="status-msg" style="text-align:center;color:#c00;margin-top:24px;"></p>
   <script>
-    const API_BASE = location.origin;
+    const API_BASE = window.API_BASE || location.origin;
     const searchBox = document.getElementById('search-box');
     const tblResults = document.querySelector('#tbl-results tbody');
     const statusMsg = document.getElementById('status-msg');
