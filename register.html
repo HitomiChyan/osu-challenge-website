@@ -53,6 +53,69 @@
 
   <h1 style="text-align:center; color: #e0d7c6; margin-bottom: 20px;">參賽報名表單</h1>
 
+  <form id="registration-form">
+    <!-- 隱藏：活動名稱（預設五週年） -->
+    <input type="hidden" id="activityName" name="activityName" value="五週年" />
+
+    <!-- 隱藏：身份（預設挑戰者） -->
+    <input type="hidden" id="identity" name="identity" value="挑戰者" />
+
+    <div class="form-group">
+      <label for="twitchName">Twitch 中文名稱：</label>
+      <input type="text" id="twitchName" name="twitchName" required />
+    </div>
+    <div class="form-group">
+      <label for="twitchID">Twitch ID：</label>
+      <input type="text" id="twitchID" name="twitchID" required />
+    </div>
+    <div class="form-group">
+      <label for="osuID">osu! ID：</label>
+      <input type="text" id="osuID" name="osuID" required />
+    </div>
+    <div class="form-group">
+      <label for="rank">挑戰 Rank：</label>
+      <select id="rank" name="rank" required>
+        <option value="5Digit">5Digit</option>
+        <option value="4Digit">4Digit</option>
+        <option value="3Digit">3Digit</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="time">挑戰時間（僅可選一天）：</label>
+      <select id="time" name="time" required>
+        <option value="2025-08-10">2025/08/10</option>
+        <option value="2025-08-11">2025/08/11</option>
+        <option value="2025-08-12">2025/08/12</option>
+        <option value="2025-08-13">2025/08/13</option>
+        <option value="2025-08-14">2025/08/14</option>
+        <option value="2025-08-15">2025/08/15</option>
+      </select>
+    </div>
+
+    <button type="submit">送出報名</button>
+    <p id="msg" class="msg"></p>
+    <p id="error" class="error"></p>
+  </form>
+
+  <script>
+    document.getElementById('registration-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('msg').textContent = '';
+      document.getElementById('error').textContent = '';
+
+      // 拿出所有欄位值
+      const activityName = document.getElementById('activityName').value;
+      const identity     = document.getElementById('identity').value;
+      const twitchName   = document.getElementById('twitchName').value.trim();
+      const twitchID     = document.getElementById('twitchID').value.trim();
+      const osuID        = document.getElementById('osuID').value.trim();
+      const rank         = document.getElementById('rank').value;
+      const time         = document.getElementById('time').value;
+
+      window.location.href = "https://forms.gle/example";
+
+    });
+  </script>
   <div class="form-wrapper">
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnqIxpiYFvfrRA3FYLJR4eCYtKgJzmw0scuiEkqDT_LQb6uA/viewform?embedded=true" allowfullscreen>
       請至 Google 表單填寫報名資訊
