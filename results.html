@@ -31,6 +31,7 @@
         <th>結果1</th>
         <th>結果2</th>
         <th>結果3</th>
+        <th>挑戰抽獎券</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -54,6 +55,26 @@
       renderTable();
     }
 
+    function calcTickets(reg) {
+      const results = reg.results || [];
+      const rank = String(reg.rank || '').toLowerCase();
+      const scoreMap = {
+        '3digit': { fc: 3, ss: 5 },
+        '4digit': { fc: 2, ss: 4 },
+        '5digit': { fc: 1, ss: 3 }
+      };
+      const rule = rank.includes('3digit')
+        ? scoreMap['3digit']
+        : rank.includes('4digit')
+        ? scoreMap['4digit']
+        : scoreMap['5digit'];
+      return results.reduce((sum, r) => {
+        if (r === 'FC+SS') return sum + rule.ss;
+        if (r === 'FC') return sum + rule.fc;
+        return sum;
+      }, 0);
+    }
+
     function renderTable() {
       const keyword = searchBox.value.trim().toLowerCase();
       tblResults.innerHTML = '';
@@ -74,7 +95,8 @@
           item.time || '',
           item.results?.[0] || '',
           item.results?.[1] || '',
-          item.results?.[2] || ''
+          item.results?.[2] || '',
+          calcTickets(item)
         ];
         cells.forEach(text => {
           const td = document.createElement('td');
@@ -87,7 +109,7 @@
       if (!tblResults.childElementCount) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 8;
+        td.colSpan = 9;
         td.textContent = '查無資料';
         td.style.color = '#888';
         tr.appendChild(td);
