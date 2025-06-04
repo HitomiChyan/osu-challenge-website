@@ -2,17 +2,24 @@
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
-// 先印出環境變數檢查一下
-console.log('--- dbConnect.js 環境變數檢查 ---');
-console.log('MONGODB_USER:', process.env.MONGODB_USER);
-console.log('MONGODB_PASSWORD:', process.env.MONGODB_PASSWORD ? '******' : '(undefined)');
-console.log('MONGODB_DBNAME:', process.env.MONGODB_DBNAME);
-console.log('----------------------------------\n');
+// Optional debug flag to print connection details when needed
+const DEBUG_DB = process.env.DEBUG_DB === 'true';
+
+// Debug logging of environment variables
+if (DEBUG_DB) {
+  console.log('--- dbConnect.js 環境變數檢查 ---');
+  console.log('MONGODB_USER:', process.env.MONGODB_USER);
+  console.log('MONGODB_PASSWORD:', process.env.MONGODB_PASSWORD ? '******' : '(undefined)');
+  console.log('MONGODB_DBNAME:', process.env.MONGODB_DBNAME);
+  console.log('----------------------------------\n');
+}
 
 // 把環境變數組成連線用的 URI
 const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}` +
             `@osu-db.nh5nspe.mongodb.net/?retryWrites=true&w=majority`;
-console.log('Generated MongoDB URI:', uri);
+if (DEBUG_DB) {
+  console.log('Generated MongoDB URI:', uri);
+}
 
 // 建立 MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
