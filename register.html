@@ -7,54 +7,18 @@
   <!-- 共用活動網站的 CSS -->
   <link rel="stylesheet" href="styles/style.css" />
   <style>
-    /* 額外微調：表單樣式 */
-    form {
-      max-width: 500px;
+    /* 報名表單外層樣式 */
+    .form-wrapper {
+      max-width: 900px;
       margin: 40px auto;
       padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background: #fff;
-      text-align: left;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
     }
-    .form-group {
-      margin-bottom: 12px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-      color: #333;
-    }
-    input[type="text"],
-    select {
+    .form-wrapper iframe {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    button[type="submit"] {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background-color: #4CAF50;
-      color: white;
+      height: 1500px;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button[type="submit"]:hover {
-      background-color: #45a049;
-    }
-    .msg {
-      margin-top: 12px;
-      color: green;
-    }
-    .error {
-      margin-top: 12px;
-      color: red;
     }
     /* 新功能按鈕區塊：跟其他頁面一致 */
     .button-container {
@@ -148,41 +112,14 @@
       const rank         = document.getElementById('rank').value;
       const time         = document.getElementById('time').value;
 
-      if (!twitchName || !twitchID || !osuID) {
-        document.getElementById('error').textContent = '請填寫所有必要欄位';
-        return;
-      }
+      window.location.href = "https://forms.gle/example";
 
-      try {
-        const resp = await fetch('/api/registrations', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            activityName,
-            identity,
-            twitchName,
-            twitchID,
-            osuID,
-            rank,
-            time
-          })
-        });
-        const data = await resp.json();
-        if (!resp.ok) {
-          document.getElementById('error').textContent = data.message || '提交失敗';
-          return;
-        }
-        document.getElementById('msg').textContent = '報名成功！';
-        // 清空表單（隱藏欄位不清）
-        document.getElementById('twitchName').value = '';
-        document.getElementById('twitchID').value   = '';
-        document.getElementById('osuID').value      = '';
-        document.getElementById('rank').selectedIndex = 0;
-        document.getElementById('time').selectedIndex = 0;
-      } catch (err) {
-        document.getElementById('error').textContent = '網路錯誤，請稍後再試';
-      }
     });
   </script>
+  <div class="form-wrapper">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnqIxpiYFvfrRA3FYLJR4eCYtKgJzmw0scuiEkqDT_LQb6uA/viewform?embedded=true" allowfullscreen>
+      請至 Google 表單填寫報名資訊
+    </iframe>
+  </div>
 </body>
 </html>
