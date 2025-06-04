@@ -7,54 +7,18 @@
   <!-- 共用活動網站的 CSS -->
   <link rel="stylesheet" href="styles/style.css" />
   <style>
-    /* 額外微調：表單樣式 */
-    form {
-      max-width: 500px;
+    /* 報名表單外層樣式 */
+    .form-wrapper {
+      max-width: 900px;
       margin: 40px auto;
       padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background: #fff;
-      text-align: left;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
     }
-    .form-group {
-      margin-bottom: 12px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-      color: #333;
-    }
-    input[type="text"],
-    select {
+    .form-wrapper iframe {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    button[type="submit"] {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background-color: #4CAF50;
-      color: white;
+      height: 1500px;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button[type="submit"]:hover {
-      background-color: #45a049;
-    }
-    .msg {
-      margin-top: 12px;
-      color: green;
-    }
-    .error {
-      margin-top: 12px;
-      color: red;
     }
     /* 新功能按鈕區塊：跟其他頁面一致 */
     .button-container {
@@ -89,100 +53,10 @@
 
   <h1 style="text-align:center; color: #e0d7c6; margin-bottom: 20px;">參賽報名表單</h1>
 
-  <form id="registration-form">
-    <!-- 隱藏：活動名稱（預設五週年） -->
-    <input type="hidden" id="activityName" name="activityName" value="五週年" />
-
-    <!-- 隱藏：身份（預設挑戰者） -->
-    <input type="hidden" id="identity" name="identity" value="挑戰者" />
-
-    <div class="form-group">
-      <label for="twitchName">Twitch 中文名稱：</label>
-      <input type="text" id="twitchName" name="twitchName" required />
-    </div>
-    <div class="form-group">
-      <label for="twitchID">Twitch ID：</label>
-      <input type="text" id="twitchID" name="twitchID" required />
-    </div>
-    <div class="form-group">
-      <label for="osuID">osu! ID：</label>
-      <input type="text" id="osuID" name="osuID" required />
-    </div>
-    <div class="form-group">
-      <label for="rank">挑戰 Rank：</label>
-      <select id="rank" name="rank" required>
-        <option value="5Digit">5Digit</option>
-        <option value="4Digit">4Digit</option>
-        <option value="3Digit">3Digit</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="time">挑戰時間（僅可選一天）：</label>
-      <select id="time" name="time" required>
-        <option value="2025-08-10">2025/08/10</option>
-        <option value="2025-08-11">2025/08/11</option>
-        <option value="2025-08-12">2025/08/12</option>
-        <option value="2025-08-13">2025/08/13</option>
-        <option value="2025-08-14">2025/08/14</option>
-        <option value="2025-08-15">2025/08/15</option>
-      </select>
-    </div>
-
-    <button type="submit">送出報名</button>
-    <p id="msg" class="msg"></p>
-    <p id="error" class="error"></p>
-  </form>
-
-  <script>
-    document.getElementById('registration-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      document.getElementById('msg').textContent = '';
-      document.getElementById('error').textContent = '';
-
-      // 拿出所有欄位值
-      const activityName = document.getElementById('activityName').value;
-      const identity     = document.getElementById('identity').value;
-      const twitchName   = document.getElementById('twitchName').value.trim();
-      const twitchID     = document.getElementById('twitchID').value.trim();
-      const osuID        = document.getElementById('osuID').value.trim();
-      const rank         = document.getElementById('rank').value;
-      const time         = document.getElementById('time').value;
-
-      if (!twitchName || !twitchID || !osuID) {
-        document.getElementById('error').textContent = '請填寫所有必要欄位';
-        return;
-      }
-
-      try {
-        const resp = await fetch('/api/registrations', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            activityName,
-            identity,
-            twitchName,
-            twitchID,
-            osuID,
-            rank,
-            time
-          })
-        });
-        const data = await resp.json();
-        if (!resp.ok) {
-          document.getElementById('error').textContent = data.message || '提交失敗';
-          return;
-        }
-        document.getElementById('msg').textContent = '報名成功！';
-        // 清空表單（隱藏欄位不清）
-        document.getElementById('twitchName').value = '';
-        document.getElementById('twitchID').value   = '';
-        document.getElementById('osuID').value      = '';
-        document.getElementById('rank').selectedIndex = 0;
-        document.getElementById('time').selectedIndex = 0;
-      } catch (err) {
-        document.getElementById('error').textContent = '網路錯誤，請稍後再試';
-      }
-    });
-  </script>
+  <div class="form-wrapper">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnqIxpiYFvfrRA3FYLJR4eCYtKgJzmw0scuiEkqDT_LQb6uA/viewform?embedded=true" allowfullscreen>
+      請至 Google 表單填寫報名資訊
+    </iframe>
+  </div>
 </body>
 </html>
