@@ -303,9 +303,9 @@ app.delete('/api/registrations/:id', ensureLogin, ensureFull, async (req, res) =
   }
 });
 
-// 啟動伺服器
-const PORT = process.env.PORT || 3000;
+// 啟動伺服器（非測試環境才啟動）
 if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log('Server running on port', PORT);
   });
