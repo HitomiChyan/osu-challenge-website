@@ -30,9 +30,17 @@ Set the following environment variables:
   (defaults to `service_account.json` in the repository root)
 - `WORKSHEET` – optional worksheet name (defaults to `Sheet1`)
 
-Then run:
+Then run the script from the repository root so the path resolves correctly:
 
 ```bash
+python scripts/update_registrations.py
+```
+
+On Windows using PowerShell the equivalent commands are:
+
+```powershell
+$env:SHEET_ID = 'your-sheet-id'
+$env:GOOGLE_APPLICATION_CREDENTIALS = 'C:\path\service_account.json'
 python scripts/update_registrations.py
 ```
 
