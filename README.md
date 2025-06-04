@@ -11,14 +11,14 @@ This keeps the website data in sync with form responses.
 ### Prerequisites
 
 - Python 3.7 or later
-- [`gspread`](https://pypi.org/project/gspread/) library
+- Python packages listed in `requirements.txt` (includes [`gspread`](https://pypi.org/project/gspread/))
 - A Google service account JSON credentials file
 - Access to the Google Sheet containing the form responses
 
-Install the Python dependency:
+Install the Python dependencies:
 
 ```bash
-pip install gspread
+pip install -r requirements.txt
 ```
 
 ### Running the update script
