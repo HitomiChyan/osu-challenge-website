@@ -8,31 +8,3 @@ COLUMN_MAPPING = {
     "Results": "results",
 }
 [
-  {
-    "twitchName": "玩家A",
-    "twitchID": "playerA",
-    "activityName": "五週年",
-    "rank": "4Digit",
-    "time": "2025-08-10",
-    "identity": "挑戰者",
-    "results": ["FC", "挑戰失敗", "FC"]
-  },
-  {
-    "twitchName": "玩家B",
-    "twitchID": "playerB",
-    "activityName": "五週年",
-    "rank": "5Digit",
-    "time": "2025-08-11",
-    "identity": "挑戰者",
-    "results": ["挑戰失敗", "挑戰失敗", "FC"]
-  },
-  {
-    "twitchName": "玩家C",
-    "twitchID": "playerC",
-    "activityName": "五週年",
-    "rank": "3Digit",
-    "time": "2025-08-12",
-    "identity": "挑戰者",
-    "results": ["FC", "FC", "FC"]
-  }
-]
