@@ -37,7 +37,6 @@
   </table>
   <p id="status-msg" style="text-align:center;color:#c00;margin-top:24px;"></p>
   <script>
-    const API_BASE = location.origin;
     const searchBox = document.getElementById('search-box');
     const tblResults = document.querySelector('#tbl-results tbody');
     const statusMsg = document.getElementById('status-msg');
@@ -46,8 +45,8 @@
     async function fetchData() {
       try {
         statusMsg.textContent = '';
-        const regsRes = await fetch(`${API_BASE}/api/registrations`, { credentials: 'include' });
-        if (!regsRes.ok) throw new Error('後台連線失敗或未登入');
+        const regsRes = await fetch('data/registrations.json');
+        if (!regsRes.ok) throw new Error('資料載入失敗');
         allRegistrations = await regsRes.json();
         renderTable();
       } catch (e) {
