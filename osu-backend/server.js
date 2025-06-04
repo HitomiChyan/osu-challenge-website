@@ -1,1 +1,4 @@
-const express = require('express'); const app = express(); app.listen(3000, () => console.log('🚀 API 運行中！'));
+// Entry point for starting the backend server.
+// Simply require app.js where the actual Express app and server
+// configuration live.
+require('./app');

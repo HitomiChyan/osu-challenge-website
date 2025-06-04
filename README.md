@@ -1,18 +1,15 @@
-# osu Challenge Website
+# OSU Challenge Website
 
-This project consists of a frontend interface and a Node.js backend located in `osu-backend`.
+This repository contains both the frontend static files and the backend API.
 
-## Local setup
+## Running the backend
 
-1. Copy `.env.example` to `.env` in the project root:
-   ```bash
-   cp .env.example .env
-   ```
-2. Edit `.env` and fill in the required values:
-   - `SESSION_SECRET` – any random string
-   - `MONGODB_USER` – your MongoDB user name
-   - `MONGODB_PASSWORD` – your MongoDB password
-   - `MONGODB_DBNAME` – the database name to use
+The backend code lives in [`osu-backend`](./osu-backend). To start the server run `node app.js` from inside that directory:
 
-The backend reads these variables at startup to configure sessions and the MongoDB connection.
+```bash
+cd osu-backend
+node app.js
+```
+
+You can also run `node server.js`, which simply requires `app.js`.
 
