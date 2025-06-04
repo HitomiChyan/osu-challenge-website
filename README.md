@@ -1,15 +1,7 @@
-# OSU Challenge Website
+# osu-challenge-website
 
-This repository contains both the frontend static files and the backend API.
+This repository contains a simple front-end and Node.js backend for the osu! challenge website.
 
-## Running the backend
+## License
 
-The backend code lives in [`osu-backend`](./osu-backend). To start the server run `node app.js` from inside that directory:
-
-```bash
-cd osu-backend
-node app.js
-```
-
-You can also run `node server.js`, which simply requires `app.js`.
-
+This project is licensed under the [MIT License](LICENSE).
