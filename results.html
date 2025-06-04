@@ -37,29 +37,33 @@
   </table>
   <p id="status-msg" style="text-align:center;color:#c00;margin-top:24px;"></p>
   <script>
-    const API_BASE = location.origin;
     const searchBox = document.getElementById('search-box');
     const tblResults = document.querySelector('#tbl-results tbody');
-    const statusMsg = document.getElementById('status-msg');
-    let allRegistrations = [];
 
-    async function fetchData() {
-      try {
-        statusMsg.textContent = '';
-        const regsRes = await fetch(`${API_BASE}/api/registrations`, { credentials: 'include' });
-        if (!regsRes.ok) throw new Error('後台連線失敗或未登入');
-        allRegistrations = await regsRes.json();
-        renderTable();
-      } catch (e) {
-        statusMsg.textContent = e.message || '資料載入失敗';
+    // 靜態資料，可由 Google Sheet 匯出後更新
+    const allRegistrations = [
+      {
+        twitchName: '示例一',
+        twitchID: 'example1',
+        activityName: '活動 A',
+        rank: 'S',
+        time: '01:23',
+        results: ['100%', '95%', '90%']
+      },
+      {
+        twitchName: '示例二',
+        twitchID: 'example2',
+        activityName: '活動 B',
+        rank: 'A',
+        time: '02:10',
+        results: ['92%', '88%', '85%']
       }
-    }
+    ];
 
     function renderTable() {
       const keyword = searchBox.value.trim().toLowerCase();
       tblResults.innerHTML = '';
       allRegistrations
-        .filter(item => item.identity === '挑戰者')
         .filter(item =>
           !keyword || (item.twitchID && item.twitchID.toLowerCase().includes(keyword))
         )
@@ -82,8 +86,7 @@
       }
     }
     searchBox.addEventListener('input', renderTable);
-
-    window.addEventListener('DOMContentLoaded', fetchData);
+    window.addEventListener('DOMContentLoaded', renderTable);
   </script>
 </body>
 </html>
