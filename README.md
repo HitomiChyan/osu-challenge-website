@@ -40,3 +40,8 @@ The script will fetch all rows from the sheet, map the columns to the expected
 fields (`twitchName`, `twitchID`, `activityName`, `rank`, `time`, `identity`,
 `results`), and write the output to `data/registrations.json` using UTF-8
 encoding.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
