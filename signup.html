@@ -18,12 +18,13 @@
   <h2>🏆 蘭喵夢想盃五週年圖譜挑戰活動</h2>
   <div class="event-period">📅 報名期間：即日起 ～ 2025/08/15</div>
   
-  <h3>🎯 挑戰規則</h3>
+  <h3>🎯 挑戰規則(最新消息將公告在Discord)</h3>
   <ul>
     <li>📝 <b>報名期間：</b> 即刻起至 <b>2025/08/15</b></li>
-    <li>🕓 <b>圖譜釋出：</b> <b>2025/08/10</b> (屆時將自動開放連結)</li>
-    <li>🟢 <b>開放挑戰：</b> 2025/08/10～2025/08/15（開台時間預計00-05/16-00(GMT+8)）</li>
+    <li>🕓 <b>圖譜釋出：</b> <b>2025/08/01</b> (屆時將自動開放連結)</li>
+    <li>🟢 <b>開放挑戰：</b> 2025/08/10～2025/08/15（開台時間預計00-03/10-00(GMT+8)）</li>
     <li>🔒 <b>僅限 NM/HD/HR/FL+NF 模式挑戰，一人限挑戰三次</b>（一天內挑戰完畢）</li>
+    <li>🎁 <b>加碼挑戰：</b>僅限 NM/HD/HR/FL 模式挑戰，一人限挑戰一次</li>
   </ul>
 
   <h3>🌈 挑戰圖譜 (感謝 HiyoYukino 幫忙選圖)</h3>
@@ -31,27 +32,46 @@
     <li><b>3Digit</b>
       <ul>
         <li>3Digit 以下皆可挑戰，報名時註明 Digit</li>
+        <li>FC+SS：<b>5張抽獎券</b>　SS：<b>3張抽獎券</b></li>
+        <li id="map-3digit" style="display:none;">
+          🔗 <a href="https://osu.ppy.sh/beatmapsets/2238312#osu/4756034" target="_blank">[3Digit SS圖譜連結]</a>
         <li>FC+SS：<b>5張抽獎券</b>　FC：<b>3張抽獎券</b></li>
         <li id="map-3digit" style="display:none;">
-          🔗 <a href="https://example.com/map-3digit" target="_blank">[3Digit 圖譜連結]</a>
+          🔗 <a href="https://osu.ppy.sh/beatmapsets/521184#osu/1389624" target="_blank">[3Digit FC圖譜連結]</a>
         </li>
       </ul>
     </li>
     <li><b>4Digit</b>
       <ul>
         <li>4Digit 以下皆可挑戰，報名時註明 Digit</li>
-        <li>FC+SS：<b>4張抽獎券</b>　FC：<b>2張抽獎券</b></li>
+        <li>FC+SS：<b>4張抽獎券</b>　SS：<b>2張抽獎券</b></li>
         <li id="map-4digit" style="display:none;">
-          🔗 <a href="https://example.com/map-4digit" target="_blank">[4Digit 圖譜連結]</a>
+          🔗 <a href="https://osu.ppy.sh/beatmapsets/393986#osu/904687" target="_blank">[4Digit SS圖譜連結]</a>
+        <li>FC+SS：<b>4張抽獎券</b>　FC：<b>2張抽獎券</b></li>
+         <li id="map-4digit" style="display:none;">
+          🔗 <a href="https://osu.ppy.sh/beatmapsets/550588#osu/1166899" target="_blank">[4Digit FC圖譜連結]</a>
         </li>
       </ul>
     </li>
     <li><b>5Digit</b>
       <ul>
         <li>5Digit 以下皆可挑戰，報名時註明 Digit</li>
+        <li>FC+SS：<b>3張抽獎券</b>　SS：<b>1張抽獎券</b></li>
+        <li id="map-5digit" style="display:none;">
+          🔗 <a href=https://osu.ppy.sh/beatmapsets/390619#osu/864246" target="_blank">[5Digit SS圖譜連結]</a>
         <li>FC+SS：<b>3張抽獎券</b>　FC：<b>1張抽獎券</b></li>
         <li id="map-5digit" style="display:none;">
-          🔗 <a href="https://example.com/map-5digit" target="_blank">[5Digit 圖譜連結]</a>
+        🔗 <a href=https://osu.ppy.sh/beatmapsets/2252246#osu/4835799" target="_blank">[5Digit FC圖譜連結]</a>
+        </li>
+      </ul>
+     </li>
+    <li><b>加碼挑戰</b>
+      <ul>
+        <li>所有人皆可挑戰，每一人僅限挑戰一次</li>
+        <li>PASS：<b>2張抽獎券</b></li>
+        <li id="map-PASS" style="display:none;">
+          🔗 <a href=https://osu.ppy.sh/beatmapsets/2373989#osu/5126514" target="_blank">[PASS-1圖譜連結]</a>
+          🔗 <a href=https://osu.ppy.sh/beatmapsets/1602786#osu/3273140" target="_blank">[PASS-2圖譜連結]</a>
         </li>
       </ul>
     </li>
@@ -63,12 +83,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // 設定釋放圖譜的時間（2025/08/10 00:00:00）
-  const unlockTime = new Date('2025-08-10T00:00:00+08:00').getTime();
+  const unlockTime = new Date('2025-08-01T00:00:00+08:00').getTime();
   const now = Date.now();
   if (now >= unlockTime) {
     document.getElementById('map-3digit').style.display = '';
     document.getElementById('map-4digit').style.display = '';
     document.getElementById('map-5digit').style.display = '';
+    document.getElementById('map-PASS').style.display = '';
   }
 });
 </script>
